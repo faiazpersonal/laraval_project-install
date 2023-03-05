@@ -1,0 +1,9 @@
+https://www.youtube.com/watch?v=CeXSQiJOctY
+
+01 composer update
+02 php artisan key:generat
+03 database creation with .env file theke dekhe nite hobe
+04 php artisan migrate --seed
+Sob done ekhon project run
+php artisan serve
+https://www.freeprojectz.com/project-source-code-database-download/college-management-system
