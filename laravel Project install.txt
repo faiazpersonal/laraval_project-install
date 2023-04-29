@@ -3,7 +3,7 @@ https://www.youtube.com/watch?v=CeXSQiJOctY
 01 composer update  composer install --ignore-platform-req=php
 02 php artisan key:generat
 03 database creation with .env file theke dekhe nite hobe
-04 php artisan migrate --seed
+04 php artisan migrate --seed  or php artisan migrate:refresh --seed
 Sob done ekhon project run
 php artisan serve
 > composer install or composer update
