@@ -22,3 +22,31 @@ ei 3 ta error asle
 composer remove simplesoftwareio/simple-qrcode
 composer remove simplesoftwareio/simple-qrcode
 composer require simplesoftwareio/simple-qrcode
+
+
+
+laravel project uplode er jonno 
+
+php artisan cache:clear
+php artisan route:clear
+php artisan config:clear
+php artisan view:clear
+
+
+file zip kora lagbe
+
+database export kora lagbe 
+
+serch bar e giye php  than select php version asbe than php version 7.4  select korte hobe  than current eita click kore dite hobe
+
+
+tar pore file uplode or database setting 
+
+tar pore env file er kaj 
+
+tar pore public folder er kaj 
+
+eta main file e move korete hobe ambong  index file 24 ar 38 no line e kaj korte hobe /.. ei ta kete dite hobe save korte hobe 
+
+
+tar pore congige folder e giye app.png edit 57 no line giye asset url e giye " er vitore sei web site er link dite hobe http soho", 
