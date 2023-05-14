@@ -1,4 +1,5 @@
-Github all commit dekhar code    git log --all --oneline
+Github all commit dekhar code    git log --all --oneline 
+git log than oi online er link ta 
 tar por ami ki branch e zete cai tar code git reset --hard commit er link ta
 
 
