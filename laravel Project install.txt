@@ -1,4 +1,10 @@
-https://www.youtube.com/watch?v=CeXSQiJOctY
+Github all commit dekhar code    git log --all --oneline
+tar por ami ki branch e zete cai tar code git reset --hard commit er link ta
+
+
+
+
+
 
 01 composer update  composer install --ignore-platform-req=php
 02 php artisan key:generat
