@@ -28,8 +28,16 @@ php artisan view:clear
 php artisan config:cache
 
 ==============================================================================
-                Larave User table er code
+                Larave 
 ==============================================================================
+          ==========  Auth install code =================
+          composer require laravel/ui 
+          php artisan ui bootstrap
+          npm install && npm run dev
+          
+          
+
+========== User Table code =================
             $table->id();
             $table->string('name');
             $table->integer('role_id')->default(2);  ## 2 mane admin or user login in one login page 
