@@ -1,36 +1,22 @@
-Github all commit dekhar code    git log --all --oneline 
-git log than oi online er link ta 
-tar por ami ki branch e zete cai tar code git reset --hard commit er link ta
+==============================================================================
+                Larave installl or git setup process
+==============================================================================
+composer create-project laravel/laravel:^9.0 example-app
 
+composer update  composer install --ignore-platform-req=php
 
+php artisan key:generat
 
+php artisan migrate --seed  or php artisan migrate:refresh --seed 
 
-
-
-01 composer update  composer install --ignore-platform-req=php
-02 php artisan key:generat
-03 database creation with .env file theke dekhe nite hobe
-04 php artisan migrate --seed  or php artisan migrate:refresh --seed   
 php artisan storage:link
-Sob done ekhon project run
+
 php artisan serve
-> composer install or composer update
-> cp .env.example .env
-> Set up .env file
-> php artisan key:generate
-> php artisan storage:link
-> php artisan migrate:fresh --seed
-> php artisan serve
-http://127.0.0.1:8000/
-If you like our project please 
-
-
 
 ei 3 ta error asle
 composer remove simplesoftwareio/simple-qrcode
 composer remove simplesoftwareio/simple-qrcode
 composer require simplesoftwareio/simple-qrcode
-
 
 
 laravel project uplode er jonno 
@@ -41,6 +27,44 @@ php artisan config:clear
 php artisan view:clear
 php artisan config:cache
 
+==============================================================================
+                Larave User table er code
+==============================================================================
+            $table->id();
+            $table->string('name');
+            $table->integer('role_id')->default(2);  ## 2 mane admin or user login in one login page 
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+
+            
+     ========== Role Model file code =================
+     protected $fillable = [
+        'name',  
+    ];
+
+
+
+
+
+
+
+
+
+==============================================================================
+                Git hub e comment link 
+==============================================================================
+Github all commit dekhar code    git log --all --oneline 
+git log than oi online er link ta 
+tar por ami ki branch e zete cai tar code git reset --hard commit er link ta
+
+
+
+==============================================================================
+                Larave Project Cpanal uplode setup process
+==============================================================================
 
 file zip kora lagbe
 
@@ -59,3 +83,138 @@ eta main file e move korete hobe ambong  index file 24 ar 38 no line e kaj korte
 
 
 tar pore congige folder e giye app.png edit 57 no line giye asset url e giye " er vitore sei web site er link dite hobe http soho", 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+user table ==========
+ $table->id();
+            $table->string('name');
+            $table->integer('role_id')->default(2);
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+========== role table ====== 
+ $table->id();
+            $table->string('name');
+            $table->timestamps();
+
+role model ==============
+protected $fillable = [
+        'name',  
+    ];
+
+    public function user(){
+        return $this->hasMany('App\User');
+    }
+
+user model ================
+   */
+    protected $fillable = [
+        'name', 'email', 'password','role_id',
+    ];
+
+
+    public function role(){
+        return $this->belongsTo('App\Role');
+    }
+
+=================== make middleware ======================== 
+php artisan make:middleware AdminMiddleware
+php artisan make:middleware UserMiddleware
+
+now protected kernel.php file 
+'admin' => \App\Http\Middleware\AdminMiddleware::class,
+'user' => \App\Http\Middleware\UserMiddleware::class,
+
+ ==================== now add below text admin middleware and user middleware ======================
+if (Auth::check() && Auth::user()->role_id == 1) {
+            return $next($request);
+        }else{
+            return redirect()->route('login');
+  }
+
+if (Auth::check() && Auth::user()->role_id == 2) {
+            return $next($request);
+        }else{
+            return redirect()->route('login');
+  }
+
+============ then add RedirectIfAuthenticated.php ================
+ if (Auth::guard($guard)->check() && Auth::user()->role->id == 1 ) {
+            return redirect()->route('admin.dashboard');
+
+        }elseif (Auth::guard($guard)->check() && Auth::user()->role->id == 2) {
+            return redirect()->route('user.dashboard');
+        }else{
+            return $next($request);
+        } 
+
+
+============ now created two controller ========== 
+php artisan make:controller Admin/AdminController
+php artisan make:controller User/UserController
+
+======================add web.php ==============
+
+Route::group(['prefix'=>'admin','middleware' =>['admin','auth'],'namespace'=>'admin'], function(){
+    Route::get('dashboard','AdminController@index')->name('admin.dashboard');
+});
+
+Route::group(['prefix'=>'user','middleware' =>['user','auth'],'namespace'=>'user'], function(){
+    Route::get('dashboard','UserController@index')->name('user.dashboard');
+});
+
+
+============= now goto loginController and add ======== 
+ protected function redirectTo(){
+        if (Auth()->user()->role_id ==1 ) {
+            return route('admin.dashboard');
+
+        }elseif (Auth()->user()->role_id ==2 ) {
+           return route('user.dashboard');
+        }
+    }
+
+also add this registerController =============
+  protected function redirectTo(){
+            if (Auth()->user()->role_id ==1 ) {
+                return route('admin.dashboard');
+
+            }elseif (Auth()->user()->role_id ==2 ) {
+            return route('user.dashboard');
+            }
+        }
+
+
+
+
+
+
+============ now create two view folder ===========
+admin
+  -> home.blade.php
+user
+  -> home.blade.php
+============== add on admin/adminController And user Controller ==========
+public function index(){
+        return view('admin.home');
+    }
+public function index(){
+        return view('user.home');
+    }
