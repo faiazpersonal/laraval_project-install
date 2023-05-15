@@ -32,7 +32,7 @@ php artisan config:cache
 ==============================================================================
           ==========  Auth install code =================
           composer require laravel/ui 
-          php artisan ui bootstrap
+          php artisan ui bootstrap --auth
           npm install && npm run dev
           
           
