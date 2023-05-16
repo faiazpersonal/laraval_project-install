@@ -48,10 +48,154 @@ php artisan config:cache
             $table->timestamps();
 
             
-     ========== Role Model file code =================
-     protected $fillable = [
+
+========== Role Model er jonno ekta table create file code =================  Role  id ta kintu user model er vitore inclode kore nite hobe
+
+php artisan make:model Role -m      diye database or model create korte hobe than 
+
+model e giye:  
+protected $fillable = [
         'name',  
     ];
+    
+    
+tar pore amra database er table er giye 
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+
+
+======================= Model e gie Roll model e ekta function muloto relation ship er jonno  ===================================== 
+
+sobar niche giye ei function ta dite hobe :
+public function user(){
+        return $this->hasMany('App\Models\User');
+    }
+
+2nd e User model e giye ei function er maddhome relateion ship korte hobe : ==========================================
+
+protected $fillable = [
+        'name', 'email', 'password','role_id',
+    ];
+
+public function role(){
+        return $this->belongsTo('App\Models\Role');
+    }
+    
+    =================== make middleware ================================================================== 
+php artisan make:middleware AdminMiddleware
+php artisan make:middleware UserMiddleware
+
+now protected kernel.php file -------------------------------------
+'admin' => \App\Http\Middleware\AdminMiddleware::class,
+'user' => \App\Http\Middleware\UserMiddleware::class,
+
+
+
+ ==================== now add below text admin middleware and user middleware =========================================
+ Return next stup e bad diye ei te use korte hobe : ar first e kintu amader auth use kore nite hobe upore 
+ use illumi\support \fasad auth
+ 
+ eta admin middelware er jonno --------------------------
+if (Auth::check() && Auth::user()->role_id == 1) {
+            return $next($request);
+        }else{
+            return redirect()->route('login');
+  }
+
+ eta user middelware er jonno -------------------------
+
+if (Auth::check() && Auth::user()->role_id == 2) {
+            return $next($request);
+        }else{
+            return redirect()->route('login');
+  }
+
+ ==================== than amader ke migrate kore nite hob  ar  =========================================
+
+tar  pore rols table e giye amader manual 2 ta data insert kore hobe 
+id 1 Admin & id 2 User
+
+ ==================== than amader ke Middelware er folder e giye RedirectIfAuthenticated.php name ze file ase oi khane  =========================================
+eta foreach er vitore lekhte hobe 
+
+
+ if (Auth::guard($guard)->check() && Auth::user()->role->id == 1 ) {
+            return redirect()->route('admin.dashboard');
+
+        }elseif (Auth::guard($guard)->check() && Auth::user()->role->id == 2) {
+            return redirect()->route('user.dashboard');
+        }else{
+            return $next($request);
+        } 
+        
+        
+  last er return $next($request); etar dorkar nai
+  
+  
+  ============ now created two controller ================================================================ 
+php artisan make:controller Admin/AdminController
+php artisan make:controller User/UserController
+
+
+======================add web.php ==============================================================================
+
+Route::group(['prefix'=>'admin','middleware' =>['admin','auth'],'namespace'=>'Admin'], function(){
+    Route::get('dashboard',[AdminController::class, 'index'])->name('admin.dashboard');
+});
+
+
+
+Route::group(['prefix'=>'user','middleware' =>['user','auth'],'namespace'=>'User'], function(){
+    Route::get('dashboard',[UserController::class, 'index'])->name('user.dashboard');
+});
+
+        
+      
+============= now goto loginController and add eta auth folder er vitore theke ============================================================= 
+route serveice provider home er niche eita lekhte hobe
+
+
+ protected function redirectTo(){
+        if (Auth()->user()->role_id ==1 ) {
+            return route('admin.dashboard');
+
+        }elseif (Auth()->user()->role_id ==2 ) {
+           return route('user.dashboard');
+        }
+    }
+
+============= now goto registerController and add eta auth folder er vitore theke ============================================================= 
+route serveice provider home er niche eita lekhte hobe
+
+  protected function redirectTo(){
+            if (Auth()->user()->role_id ==1 ) {
+                return route('admin.dashboard');
+
+            }elseif (Auth()->user()->role_id ==2 ) {
+            return route('user.dashboard');
+            }
+        }
+        
+        
+  eita korar pore arektu niche giye  user create  ekta option ase 
+  name er pore 
+  role_id =>2,
+
+
+============ now create two view folder =================================================
+admin
+  -> home.blade.php
+user
+  -> home.blade.php
+============== add on admin/adminController And user Controller ==========
+public function index(){
+        return view('admin.home');
+    }
+public function index(){
+        return view('user.home');
+    }
+
 
 
 
@@ -93,136 +237,49 @@ eta main file e move korete hobe ambong  index file 24 ar 38 no line e kaj korte
 tar pore congige folder e giye app.png edit 57 no line giye asset url e giye " er vitore sei web site er link dite hobe http soho", 
 
 
+==============================================================================
+              visual studio code extensions
+==============================================================================
+
+Atom one dark theme
+vscode great icons 
+code runner 
+code spell checker 
+autp import 
+beautify 
+getter and setter generator 
+mithril emmet
+
+auto close tag
+auto rename tag
+bootstrap 4, font awesome4 ....
+format html in php
+html css support 
+html snippets 
+javascript es6 code snippets
+live server 
+mysql autocomplete
+database client 
+
+php awesome snippets
+php debug
+php namespace resolver 
+phpcs
+php docblocker
+phpdoc comment 
+
+php intelephense
+prettier code formatter 
+community material theme 
+laravel blade snippets 
+laravel snippets
+laravel artisan
+laravel go to view 
+laravel extra intellisense
+laravel goto components
+laravel blade spacer 
+
+open in browser
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-user table ==========
- $table->id();
-            $table->string('name');
-            $table->integer('role_id')->default(2);
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
-========== role table ====== 
- $table->id();
-            $table->string('name');
-            $table->timestamps();
-
-role model ==============
-protected $fillable = [
-        'name',  
-    ];
-
-    public function user(){
-        return $this->hasMany('App\User');
-    }
-
-user model ================
-   */
-    protected $fillable = [
-        'name', 'email', 'password','role_id',
-    ];
-
-
-    public function role(){
-        return $this->belongsTo('App\Role');
-    }
-
-=================== make middleware ======================== 
-php artisan make:middleware AdminMiddleware
-php artisan make:middleware UserMiddleware
-
-now protected kernel.php file 
-'admin' => \App\Http\Middleware\AdminMiddleware::class,
-'user' => \App\Http\Middleware\UserMiddleware::class,
-
- ==================== now add below text admin middleware and user middleware ======================
-if (Auth::check() && Auth::user()->role_id == 1) {
-            return $next($request);
-        }else{
-            return redirect()->route('login');
-  }
-
-if (Auth::check() && Auth::user()->role_id == 2) {
-            return $next($request);
-        }else{
-            return redirect()->route('login');
-  }
-
-============ then add RedirectIfAuthenticated.php ================
- if (Auth::guard($guard)->check() && Auth::user()->role->id == 1 ) {
-            return redirect()->route('admin.dashboard');
-
-        }elseif (Auth::guard($guard)->check() && Auth::user()->role->id == 2) {
-            return redirect()->route('user.dashboard');
-        }else{
-            return $next($request);
-        } 
-
-
-============ now created two controller ========== 
-php artisan make:controller Admin/AdminController
-php artisan make:controller User/UserController
-
-======================add web.php ==============
-
-Route::group(['prefix'=>'admin','middleware' =>['admin','auth'],'namespace'=>'admin'], function(){
-    Route::get('dashboard','AdminController@index')->name('admin.dashboard');
-});
-
-Route::group(['prefix'=>'user','middleware' =>['user','auth'],'namespace'=>'user'], function(){
-    Route::get('dashboard','UserController@index')->name('user.dashboard');
-});
-
-
-============= now goto loginController and add ======== 
- protected function redirectTo(){
-        if (Auth()->user()->role_id ==1 ) {
-            return route('admin.dashboard');
-
-        }elseif (Auth()->user()->role_id ==2 ) {
-           return route('user.dashboard');
-        }
-    }
-
-also add this registerController =============
-  protected function redirectTo(){
-            if (Auth()->user()->role_id ==1 ) {
-                return route('admin.dashboard');
-
-            }elseif (Auth()->user()->role_id ==2 ) {
-            return route('user.dashboard');
-            }
-        }
-
-
-
-
-
-
-============ now create two view folder ===========
-admin
-  -> home.blade.php
-user
-  -> home.blade.php
-============== add on admin/adminController And user Controller ==========
-public function index(){
-        return view('admin.home');
-    }
-public function index(){
-        return view('user.home');
-    }
